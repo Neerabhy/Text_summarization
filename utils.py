@@ -5,6 +5,7 @@ import torch.nn as nn
 from torch.nn.functional import log_softmax, pad
 import math
 import copy
+import spacy
 import pandas as pd
 
 class PositionWiseFeedForward(nn.Module):
@@ -70,3 +71,12 @@ class SubLayerConnection(nn.Module):
 
 def clones(module, n):
     return nn.ModuleList([copy.deepcopy(module) for _ in range(n)])
+
+
+spacy_en = spacy.load("en_core_web_sm") 
+def tokenize(text, tokenizer):
+    return [tok.text for tok in tokenizer.tokenizer(text)]
+    
+def yield_tokens(data_iter, tokenizer):
+    for from_to_tuple in data_iter:
+        yield tokenizer(from_to_tuple)
